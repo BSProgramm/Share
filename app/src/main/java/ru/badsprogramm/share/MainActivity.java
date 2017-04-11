@@ -36,10 +36,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     AppCompatEditText messageView;
     AppCompatImageView imageLoad;
     Bitmap bitmap = null;
+    Uri selectedImage;
 
     public static final String TOKEN_VK_OUTH = "tokenVk";
     static final int GALLERY_REQUEST = 1;
-    static boolean IMG_LOADED = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivityForResult(intent, 0);
             break;
             case R.id.vkWall:
-                if(!IMG_LOADED)
+                if(bitmap == null )
                     makePost(null, messageView.getText().toString());
                 else
                     makePostWithPhoto(bitmap, messageView.getText().toString());
@@ -79,18 +79,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Постинг с фоткой
     void makePostWithPhoto (final Bitmap photo, final String message) {
-        VKRequest request = VKApi.uploadWallPhotoRequest(new VKUploadImage(photo,
-                VKImageParameters.pngImage()), getMyId(), 0);
-        request.executeWithListener(new VKRequest.VKRequestListener() {
+        VKRequest request = VKApi.uploadWallPhotoRequest(new VKUploadImage(photo, VKImageParameters.jpgImage(1f)), getMyId(), 0);
+        request.executeWithListener( new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
-                // recycle bitmap
                 VKApiPhoto photoModel = ((VKPhotoArray) response.parsedModel).get(0);
                 makePost(new VKAttachments(photoModel), message);
             }
             @Override
             public void onError(VKError error) {
-                // error
+                Toast.makeText(getApplicationContext(), "Трабл в загрузке картинки", Toast.LENGTH_SHORT)
+                        .show();
             }
         });}
 
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         post.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
-                IMG_LOADED = false;
+                bitmap = null;
                 imageLoad.setImageResource(R.drawable.image_load);
                 messageView.setText("");
                 Toast.makeText(getApplicationContext(),"Успешно",Toast.LENGTH_SHORT).show();
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onError(VKError error) {
-                Toast.makeText(getApplicationContext(), error.errorReason, Toast.LENGTH_SHORT)
+                Toast.makeText(getApplicationContext(), "трабл в постинге", Toast.LENGTH_SHORT)
                         .show();
             }
         });
@@ -125,14 +124,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case GALLERY_REQUEST:
                 if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
+                    selectedImage = imageReturnedIntent.getData();
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     imageLoad.setImageBitmap(bitmap);
-                    IMG_LOADED = true;
                 }
         }
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
