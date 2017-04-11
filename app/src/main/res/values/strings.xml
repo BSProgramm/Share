@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Share</string>
-    <string name="vk">VK</string>
+    <string name="vk">АВТОРИЗОВАТЬСЯ В VK</string>
     <string name="wall">wall</string>
+    <string name="interMessage">ВВЕДИТЕ ТЕКСТ</string>
+    <string name="post">ЗАПОСТИТЬ</string>
     <integer name="com_vk_sdk_AppId">5977422</integer>
 </resources>
