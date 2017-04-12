@@ -13,7 +13,7 @@ import com.vk.sdk.api.VKError;
 
 public class VkOuth extends AppCompatActivity {
 
-    String[] scope = new String[] {VKScope.WALL, VKScope.GROUPS};
+    String[] scope = new String[] {VKScope.WALL, VKScope.GROUPS, VKScope.PHOTOS};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

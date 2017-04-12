@@ -2,12 +2,14 @@ package ru.badsprogramm.share;
 
 import android.content.Intent;
 
+import com.facebook.FacebookSdk;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
 
 public class Application extends android.app.Application {
 
+    //VK
     VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
         @Override
         public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
@@ -18,12 +20,14 @@ public class Application extends android.app.Application {
             }
         }
     };
+
+
     @Override
     public void onCreate() {
         super.onCreate();
-
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
+        FacebookSdk.sdkInitialize(this);
     }
 
 }

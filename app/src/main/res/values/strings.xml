@@ -5,4 +5,7 @@
     <string name="interMessage">ВВЕДИТЕ ТЕКСТ</string>
     <string name="post">ЗАПОСТИТЬ</string>
     <integer name="com_vk_sdk_AppId">5977422</integer>
+    <string name="facebook_app_id">603789239820561</string>
+    <string name="fb">АВТОРИЗОВАТЬСЯ В FACEBOOK</string>
+
 </resources>

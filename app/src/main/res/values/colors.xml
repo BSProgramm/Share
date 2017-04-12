@@ -7,4 +7,6 @@
     <color name="cardView">#25313b</color>
     <color name="textColor">#e2e2e1</color>
     <color name="textColorHint">#b7b7b7</color>
+    <color name="iconStatusOK">#31864d</color>
+    <color name="iconStatusNotOK">#863132</color>
 </resources>

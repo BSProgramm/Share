@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -31,8 +32,8 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    CardView vkBtn;
-    LinearLayout vkWall;
+    CardView vkBtn, fbBtn;
+    LinearLayout vkWall, statusVk, statusFb;
     AppCompatEditText messageView;
     AppCompatImageView imageLoad;
     Bitmap bitmap = null;
@@ -47,13 +48,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         vkBtn = (CardView) findViewById(R.id.vkBtn);
+        fbBtn = (CardView) findViewById(R.id.fbBtn);
         vkWall= (LinearLayout) findViewById(R.id.vkWall);
         messageView = (AppCompatEditText) findViewById(R.id.messageView);
         imageLoad = (AppCompatImageView) findViewById(R.id.imageLoad);
+        statusVk = (LinearLayout) findViewById(R.id.statusVk);
+        statusFb = (LinearLayout) findViewById(R.id.statusFb);
+
+        //проверка на корректность токена
+        check(VKAccessToken.currentToken(),statusVk);
+        check(AccessToken.getCurrentAccessToken(), statusFb);
 
         vkBtn.setOnClickListener(this);
+        fbBtn.setOnClickListener(this);
         vkWall.setOnClickListener(this);
         imageLoad.setOnClickListener(this); //Загрузка картинки из галереи
+    }
+
+    //Проверка на токен (Зеленый если все ок и красный, если наоборот)
+    private void check(Object token, LinearLayout layout) {
+        if (token!=null)
+            layout.setBackgroundColor(getResources().getColor(R.color.iconStatusOK));
+        else
+            layout.setBackgroundColor(getResources().getColor(R.color.iconStatusNotOK));
     }
 
     @Override
@@ -63,6 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(getApplicationContext(), VkOuth.class);
                 startActivityForResult(intent, 0);
             break;
+            case R.id.fbBtn:
+                intent = new Intent(getApplicationContext(), FbOuth.class);
+                startActivityForResult(intent, 0);
+                break;
             case R.id.vkWall:
                 if(bitmap == null )
                     makePost(null, messageView.getText().toString());
@@ -117,6 +138,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .show();
             }
         });
+    }
+
+    @Override
+    protected void onResume(){
+        check(VKAccessToken.currentToken(), statusVk);
+        check(AccessToken.getCurrentAccessToken(), statusFb);
+        super.onResume();
     }
 
     @Override
